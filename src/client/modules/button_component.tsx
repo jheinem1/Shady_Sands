@@ -26,7 +26,7 @@ export default class ButtonComponent extends Roact.Component<ButtonComponentProp
                     Event={{
                         MouseButton1Click: () => {
                             this.setState({ enabled: !this.state.enabled });
-                            this.props.sound.Volume = this.state.enabled ? 1 : 0;
+                            this.props.sound.Volume = this.state.enabled ? 2 : 0;
                         },
                     }}
                 />
