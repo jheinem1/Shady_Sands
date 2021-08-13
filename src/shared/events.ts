@@ -2,10 +2,12 @@ import { Networking } from "@flamework/networking";
 import { RadioStation } from "./modules/radio/station-data-structures";
 
 interface ServerEvents {
+    areStationsLoaded(): void;
     requestStation(stationName: string): void;
 }
 
 interface ClientEvents {
+    stationsLoaded(loaded: boolean): void;
     recieveStation(stationName: string, station: RadioStation | undefined): void;
 }
 

@@ -1,4 +1,4 @@
-import { MarketplaceService } from "@rbxts/services";
+import { ContentProvider, MarketplaceService } from "@rbxts/services";
 
 export interface Song {
     name: string;
@@ -26,17 +26,20 @@ export function createStation(name: string, songs: Song[]): RadioStation {
 async function getSongLength(id: number) {
     const song = new Instance("Sound");
     song.SoundId = `rbxassetid://${id}`;
-    song.Loaded.Wait();
+    ContentProvider.PreloadAsync([song]);
     return song.TimeLength;
 }
 
-export function getSongsFromId(songIds: number[]): Promise<Song>[] {
-    return songIds.mapFiltered(async (id) => {
+export async function getSongsFromId(songIds: number[]): Promise<Song[]> {
+    const songs = new Array<Song>();
+    for (const id of songIds) {
         const info = MarketplaceService.GetProductInfo(id, Enum.InfoType.Asset);
-        return {
-            name: info.Name,
-            id: id,
-            length: await getSongLength(id),
-        };
-    });
+        if (info.AssetTypeId === 3)
+            songs.push({
+                name: info.Name,
+                id: id,
+                length: await getSongLength(id),
+            });
+    }
+    return songs;
 }
