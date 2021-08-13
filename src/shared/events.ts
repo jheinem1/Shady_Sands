@@ -1,5 +1,5 @@
 import { Networking } from "@flamework/networking";
-import { RadioStation } from "./modules/radio/station-data-structures";
+import { RadioStation } from "./modules/radio/station_data_structures";
 
 interface ServerEvents {
     areStationsLoaded(): void;

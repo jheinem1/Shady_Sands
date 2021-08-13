@@ -1,11 +1,14 @@
 import { Controller, OnStart } from "@flamework/core";
-import { ContentProvider, Workspace } from "@rbxts/services";
+import Roact from "@rbxts/roact";
+import { ContentProvider, Players, Workspace } from "@rbxts/services";
 import { Events } from "client/events";
-import { RadioStation } from "shared/modules/radio/station-data-structures";
+import ButtonComponent from "client/modules/button_component";
+import { RadioStation } from "shared/modules/radio/station_data_structures";
 
 @Controller()
 export class TempRadioController implements OnStart {
     onStart() {
+        // get station
         const stationPromise = new Promise((resolve: (station: RadioStation | undefined) => void) => {
             const onLoaded = () => {
                 const recieveStationConnection = Events.connect("recieveStation", (stationName, station) => {
@@ -24,6 +27,7 @@ export class TempRadioController implements OnStart {
             });
             Events.areStationsLoaded();
         });
+        // create/manage sound
         const sound = new Instance("Sound");
         sound.Name = "[DEFAULT RADIO STATION]";
         sound.Parent = Workspace;
@@ -47,5 +51,10 @@ export class TempRadioController implements OnStart {
                 });
             } else warn("Unable to fetch radio station data");
         });
+        // mount button component
+        Roact.mount(
+            Roact.createElement(ButtonComponent, { sound: sound }),
+            Players.LocalPlayer.WaitForChild("PlayerGui", 5),
+        );
     }
 }

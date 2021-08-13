@@ -1,6 +1,6 @@
 import { OnStart, Service } from "@flamework/core";
 import { Events } from "server/events";
-import { createStation, getSongsFromId, RadioStation } from "shared/modules/radio/station-data-structures";
+import { createStation, getSongsFromId, RadioStation } from "shared/modules/radio/station_data_structures";
 import radioStations from "shared/modules/radio/stations";
 
 @Service()
