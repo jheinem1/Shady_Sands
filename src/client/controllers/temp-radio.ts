@@ -1,32 +1,14 @@
 import { Controller, OnStart } from "@flamework/core";
 import Roact from "@rbxts/roact";
 import { ContentProvider, Players, Workspace } from "@rbxts/services";
-import { Events } from "client/events";
 import ButtonComponent from "client/modules/button_component";
-import { RadioStation } from "shared/modules/radio/station_data_structures";
+import Remotes from "shared/modules/remotes";
 
 @Controller()
 export class TempRadioController implements OnStart {
     onStart() {
         // get station
-        const stationPromise = new Promise((resolve: (station: RadioStation | undefined) => void) => {
-            const onLoaded = () => {
-                const recieveStationConnection = Events.connect("recieveStation", (stationName, station) => {
-                    if (stationName === "Default") {
-                        recieveStationConnection.Disconnect();
-                        resolve(station);
-                    }
-                });
-                Events.requestStation("Default");
-            };
-            const stationLoadedConnection = Events.connect("stationsLoaded", (loaded) => {
-                if (loaded) {
-                    onLoaded();
-                    stationLoadedConnection.Disconnect();
-                }
-            });
-            Events.areStationsLoaded();
-        });
+        const stationPromise = Remotes.Client.WaitFor("GetStation").then((remote) => remote.CallServerAsync("Default"));
         // create/manage sound
         const sound = new Instance("Sound");
         sound.Name = "[DEFAULT RADIO STATION]";

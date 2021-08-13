@@ -1,14 +1,14 @@
 import { OnStart, Service } from "@flamework/core";
-import { Events } from "server/events";
 import { createStation, getSongsFromId, RadioStation } from "shared/modules/radio/station_data_structures";
 import radioStations from "shared/modules/radio/stations";
+import Remotes from "shared/modules/remotes";
 
 @Service()
 export class RadioService implements OnStart {
     stations = new Map<string, RadioStation>();
     running = true;
+    getStationRemote = Remotes.Server.Create("GetStation");
     onStart() {
-        const connection = Events.connect("areStationsLoaded", (player) => Events.stationsLoaded.fire(player, false));
         // load stations
         const promises = new Array<Promise<void>>();
         for (const station of radioStations) {
@@ -30,18 +30,11 @@ export class RadioService implements OnStart {
             );
         }
         // connect to events
-        Events.connect("requestStation", (player: Player, stationName: string) => {
-            const station = this.stations.get(stationName);
-            if (station)
-                station.currentSongTime =
-                    station.startedCurrentSong !== undefined ? os.time() - station.startedCurrentSong : 0;
-            Events.recieveStation(player, stationName, station);
-        });
-        // fire loaded event when done
-        Promise.allSettled(promises).then(() => {
-            Events.stationsLoaded.broadcast(true);
-            connection.Disconnect();
-            Events.connect("areStationsLoaded", (player) => Events.stationsLoaded.fire(player, true));
-        });
+        this.getStationRemote.SetCallback(
+            (_player, stationName) =>
+                new Promise((resolve: (station: RadioStation | false) => void) =>
+                    Promise.allSettled(promises).then(() => resolve(this.stations.get(stationName) ?? false)),
+                ),
+        );
     }
 }
