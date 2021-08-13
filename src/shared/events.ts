@@ -1,6 +1,9 @@
 import { Networking } from "@flamework/networking";
+import { RadioStation } from "./modules/radio/station-data-structures";
 
-interface ServerEvents {}
+interface ServerEvents {
+    getStation(station: string): RadioStation | undefined;
+}
 
 interface ClientEvents {}
 
