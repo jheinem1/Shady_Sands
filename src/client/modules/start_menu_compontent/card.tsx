@@ -6,8 +6,8 @@ interface CardComponentProps {
     position: Roact.Binding<UDim2>;
     title: Roact.Binding<string>;
     description: Roact.Binding<string>;
-    image: Roact.Binding<number>;
-    groupID: Roact.Binding<number>;
+    image: Roact.Binding<number | undefined>;
+    groupID: Roact.Binding<number | undefined>;
 }
 
 export class CardComponent extends Roact.Component<CardComponentProps> {
@@ -32,7 +32,9 @@ export class CardComponent extends Roact.Component<CardComponentProps> {
                 <imagelabel
                     Key="Image"
                     BackgroundTransparency={1}
-                    Image="rbxassetid://7271977339"
+                    Image={this.props.image.map((id) =>
+                        id !== undefined ? `rbxassetid://${id}` : "rbxassetid://7271977339",
+                    )}
                     ImageTransparency={this.focused.map((x) => -x + 1)}
                     Size={new UDim2(0.79, 0, 1, 0)}
                     SizeConstraint={Enum.SizeConstraint.RelativeYY}
@@ -43,6 +45,7 @@ export class CardComponent extends Roact.Component<CardComponentProps> {
                     Font={Enum.Font.SourceSansBold}
                     Position={new UDim2(0.55, 0, 0.2, 0)}
                     Size={new UDim2(0.3, 0, 0.1, 0)}
+                    Text={this.props.title}
                     TextColor3={this.focused.map((x) =>
                         Color3.fromRGB(150, 150, 150).Lerp(Color3.fromRGB(255, 255, 255), x),
                     )}
@@ -56,7 +59,7 @@ export class CardComponent extends Roact.Component<CardComponentProps> {
                     Font={Enum.Font.SourceSans}
                     Position={new UDim2(0.55, 0, 0.3, 0)}
                     Size={new UDim2(0.3, 0, 0.5, 0)}
-                    Text="This is some text that you won't ever see"
+                    Text={this.props.description}
                     TextColor3={this.focused.map((x) =>
                         Color3.fromRGB(150, 150, 150).Lerp(Color3.fromRGB(255, 255, 255), x),
                     )}
