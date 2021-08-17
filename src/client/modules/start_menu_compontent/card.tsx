@@ -4,6 +4,10 @@ import Roact from "@rbxts/roact";
 interface CardComponentProps {
     focusedMotor: SingleMotor;
     position: Roact.Binding<UDim2>;
+    title: Roact.Binding<string>;
+    description: Roact.Binding<string>;
+    image: Roact.Binding<number>;
+    groupID: Roact.Binding<number>;
 }
 
 export class CardComponent extends Roact.Component<CardComponentProps> {
