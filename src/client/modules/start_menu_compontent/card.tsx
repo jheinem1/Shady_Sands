@@ -73,7 +73,7 @@ export class CardComponent extends Roact.Component<CardComponentProps> {
                     BackgroundColor3={Color3.fromRGB(255, 255, 255)}
                     Font={Enum.Font.SourceSansSemibold}
                     Position={new UDim2(0.55, 0, 0.8, 0)}
-                    Size={new UDim2(0.15, -5, 0.06, 0)}
+                    Size={new UDim2(0.15, -5, 0.07, 0)}
                     Text="Group"
                     TextColor3={Color3.fromRGB(32, 32, 43)}
                     TextScaled={true}
@@ -102,7 +102,7 @@ export class CardComponent extends Roact.Component<CardComponentProps> {
                     BackgroundColor3={Color3.fromRGB(255, 255, 255)}
                     Font={Enum.Font.SourceSansSemibold}
                     Position={new UDim2(0.7, 5, 0.8, 0)}
-                    Size={new UDim2(0.15, -5, 0.06, 0)}
+                    Size={new UDim2(0.15, -5, 0.07, 0)}
                     Text="Play"
                     TextColor3={Color3.fromRGB(32, 32, 43)}
                     TextScaled={true}
