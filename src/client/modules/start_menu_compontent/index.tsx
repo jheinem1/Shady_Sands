@@ -1,6 +1,7 @@
 import { SingleMotor } from "@rbxts/flipper";
 import Roact, { Element } from "@rbxts/roact";
 import { Players, Workspace } from "@rbxts/services";
+import { BetterBinding } from "shared/modules/better_bindings";
 import { Faction } from "shared/modules/factions";
 import { CardComponent } from "./card";
 
@@ -13,42 +14,24 @@ interface StartMenuState {
 }
 
 export class StartMenuComponent extends Roact.Component<StartMenuProps, StartMenuState> {
-    leftCardVisible: Roact.Binding<boolean>;
-    rightCardVisible: Roact.Binding<boolean>;
-    centerCardVisible: Roact.Binding<boolean>;
-    setLeftCardVisible: (visible: boolean) => void;
-    setRightCardVisible: (visible: boolean) => void;
-    setCenterCardVisible: (visible: boolean) => void;
-    leftCardPos: Roact.Binding<UDim2>;
-    rightCardPos: Roact.Binding<UDim2>;
-    centerCardPos: Roact.Binding<UDim2>;
-    setLeftCardPos: (position: UDim2) => void;
-    setRightCardPos: (position: UDim2) => void;
-    setCenterCardPos: (position: UDim2) => void;
-    leftCardTitle: Roact.Binding<string>;
-    rightCardTitle: Roact.Binding<string>;
-    centerCardTitle: Roact.Binding<string>;
-    setLeftCardTitle: (title: string) => void;
-    setRightCardTitle: (title: string) => void;
-    setCenterCardTitle: (title: string) => void;
-    leftCardDescription: Roact.Binding<string>;
-    rightCardDescription: Roact.Binding<string>;
-    centerCardDescription: Roact.Binding<string>;
-    setLeftCardDescription: (description: string) => void;
-    setRightCardDescription: (description: string) => void;
-    setCenterCardDescription: (description: string) => void;
-    leftCardImage: Roact.Binding<number | undefined>;
-    rightCardImage: Roact.Binding<number | undefined>;
-    centerCardImage: Roact.Binding<number | undefined>;
-    setLeftCardImage: (image: number | undefined) => void;
-    setRightCardImage: (image: number | undefined) => void;
-    setCenterCardImage: (image: number | undefined) => void;
-    leftCardGroupID: Roact.Binding<number | undefined>;
-    rightCardGroupID: Roact.Binding<number | undefined>;
-    centerCardGroupID: Roact.Binding<number | undefined>;
-    setLeftCardGroupID: (groupID: number | undefined) => void;
-    setRightCardGroupID: (groupID: number | undefined) => void;
-    setCenterCardGroupID: (groupID: number | undefined) => void;
+    leftCardVisible = new BetterBinding<boolean>(false);
+    rightCardVisible = new BetterBinding<boolean>(false);
+    centerCardVisible = new BetterBinding<boolean>(false);
+    leftCardPos = new BetterBinding(new UDim2());
+    rightCardPos = new BetterBinding(new UDim2());
+    centerCardPos = new BetterBinding(new UDim2());
+    leftCardTitle = new BetterBinding("");
+    rightCardTitle = new BetterBinding("");
+    centerCardTitle = new BetterBinding("");
+    leftCardDescription = new BetterBinding("");
+    rightCardDescription = new BetterBinding("");
+    centerCardDescription = new BetterBinding("");
+    leftCardImage = new BetterBinding<number | undefined>(undefined);
+    rightCardImage = new BetterBinding<number | undefined>(undefined);
+    centerCardImage = new BetterBinding<number | undefined>(undefined);
+    leftCardGroupID = new BetterBinding<number | undefined>(undefined);
+    rightCardGroupID = new BetterBinding<number | undefined>(undefined);
+    centerCardGroupID = new BetterBinding<number | undefined>(undefined);
     leftFocusedMotor = new SingleMotor(0);
     centerFocusedMotor = new SingleMotor(0);
     rightFocusedMotor = new SingleMotor(0);
@@ -58,25 +41,6 @@ export class StartMenuComponent extends Roact.Component<StartMenuProps, StartMen
     factionIndex = 0;
     constructor(props: StartMenuProps) {
         super(props);
-        // thanks roact bindables for being so awesome and scaling so well
-        [this.leftCardVisible, this.setLeftCardVisible] = Roact.createBinding<boolean>(false);
-        [this.rightCardVisible, this.setRightCardVisible] = Roact.createBinding<boolean>(false);
-        [this.centerCardVisible, this.setCenterCardVisible] = Roact.createBinding<boolean>(false);
-        [this.leftCardPos, this.setLeftCardPos] = Roact.createBinding(new UDim2());
-        [this.rightCardPos, this.setRightCardPos] = Roact.createBinding(new UDim2());
-        [this.centerCardPos, this.setCenterCardPos] = Roact.createBinding(new UDim2());
-        [this.leftCardTitle, this.setLeftCardTitle] = Roact.createBinding("");
-        [this.rightCardTitle, this.setRightCardTitle] = Roact.createBinding("");
-        [this.centerCardTitle, this.setCenterCardTitle] = Roact.createBinding("");
-        [this.leftCardDescription, this.setLeftCardDescription] = Roact.createBinding("");
-        [this.rightCardDescription, this.setRightCardDescription] = Roact.createBinding("");
-        [this.centerCardDescription, this.setCenterCardDescription] = Roact.createBinding("");
-        [this.leftCardImage, this.setLeftCardImage] = Roact.createBinding<number | undefined>(undefined);
-        [this.rightCardImage, this.setRightCardImage] = Roact.createBinding<number | undefined>(undefined);
-        [this.centerCardImage, this.setCenterCardImage] = Roact.createBinding<number | undefined>(undefined);
-        [this.leftCardGroupID, this.setLeftCardGroupID] = Roact.createBinding<number | undefined>(undefined);
-        [this.rightCardGroupID, this.setRightCardGroupID] = Roact.createBinding<number | undefined>(undefined);
-        [this.centerCardGroupID, this.setCenterCardGroupID] = Roact.createBinding<number | undefined>(undefined);
     }
     updateCards() {
         const playerFactions = this.props.playerFactions;
@@ -92,9 +56,9 @@ export class StartMenuComponent extends Roact.Component<StartMenuProps, StartMen
     updateCardPos(sideSize: Vector2, centerSize: Vector2) {
         const center = this.getViewportCenter();
         if (center) {
-            this.setLeftCardPos(UDim2.fromOffset(-sideSize.X / 2, center.Y - sideSize.Y / 2));
-            this.setRightCardPos(UDim2.fromOffset(center.X - sideSize.X / 2, center.Y - sideSize.Y / 2));
-            this.setLeftCardPos(UDim2.fromOffset(center.X - center.X / 2, center.Y - centerSize.Y / 2));
+            this.leftCardPos.setValue(UDim2.fromOffset(-sideSize.X / 2, center.Y - sideSize.Y / 2));
+            this.rightCardPos.setValue(UDim2.fromOffset(center.X - sideSize.X / 2, center.Y - sideSize.Y / 2));
+            this.centerCardPos.setValue(UDim2.fromOffset(center.X - center.X / 2, center.Y - centerSize.Y / 2));
         }
     }
     getViewportCenter() {
