@@ -1,9 +1,11 @@
-import { ContentProvider, MarketplaceService } from "@rbxts/services";
+import { Debris, MarketplaceService, ServerStorage } from "@rbxts/services";
 
 export interface Song {
     name: string;
     id: number;
     length: number;
+    volume?: number;
+    pitch?: number;
 }
 
 export interface RadioStation {
@@ -26,7 +28,9 @@ export function createStation(name: string, songs: Song[]): RadioStation {
 async function getSongLength(id: number) {
     const song = new Instance("Sound");
     song.SoundId = `rbxassetid://${id}`;
-    ContentProvider.PreloadAsync([song]);
+    song.Parent = ServerStorage;
+    if (!song.IsLoaded) song.Loaded.Wait();
+    Debris.AddItem(song, 1);
     return song.TimeLength;
 }
 

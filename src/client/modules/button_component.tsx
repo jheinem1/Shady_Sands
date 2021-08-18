@@ -23,6 +23,7 @@ export default class ButtonComponent extends Roact.Component<ButtonComponentProp
         let setBinding: (newValue: number) => void;
         [this.binding, setBinding] = Roact.createBinding(this.motor.getValue());
         this.motor.onStep(setBinding);
+        props.sound.Volume = 1.5;
     }
     didMount() {
         const image0 = new Instance("ImageLabel");
@@ -44,7 +45,7 @@ export default class ButtonComponent extends Roact.Component<ButtonComponentProp
                     Event={{
                         MouseButton1Click: () => {
                             this.setState({ enabled: !this.state.enabled });
-                            this.props.sound.Volume = this.state.enabled ? 2 : 0;
+                            this.props.sound.Volume = this.state.enabled ? 1.5 : 0;
                             const time = 5;
                             this.motor.setGoal(
                                 new Spring(0, {

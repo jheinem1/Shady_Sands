@@ -19,10 +19,10 @@ export class RadioService implements OnStart {
             promises.push(
                 stationObjPromise.then((stationObj) => {
                     this.stations.set(station.name, stationObj);
-                    stationObj.startedCurrentSong = os.time();
+                    stationObj.startedCurrentSong = os.clock();
                     const nextSong = () => {
                         if (++stationObj.currentSongIndex >= stationObj.songs.size()) stationObj.currentSongIndex = 0;
-                        stationObj.startedCurrentSong = os.time();
+                        stationObj.startedCurrentSong = os.clock();
                         task.delay(stationObj.songs[stationObj.currentSongIndex].length, nextSong);
                     };
                     task.delay(stationObj.songs[stationObj.currentSongIndex].length, nextSong);
