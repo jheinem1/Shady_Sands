@@ -2,6 +2,7 @@ import { SingleMotor } from "@rbxts/flipper";
 import Roact from "@rbxts/roact";
 
 interface CardComponentProps {
+    visible: Roact.Binding<boolean>;
     focusedMotor: SingleMotor;
     position: Roact.Binding<UDim2>;
     title: Roact.Binding<string>;
@@ -28,6 +29,7 @@ export class CardComponent extends Roact.Component<CardComponentProps> {
                 BorderColor3={Color3.fromRGB(125, 125, 168)}
                 Size={this.focused.map((x) => new UDim2(0.4, 0, 0.2, 0).Lerp(new UDim2(0.8, 0, 0.4, 0), x))}
                 SizeConstraint={Enum.SizeConstraint.RelativeYY}
+                Visible={this.props.visible}
             >
                 <imagelabel
                     Key="Image"
