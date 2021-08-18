@@ -1,7 +1,10 @@
 import Roact from "@rbxts/roact";
 import { Workspace } from "@rbxts/services";
+import { Faction } from "shared/modules/factions";
 
-interface StartMenuProps {}
+interface StartMenuProps {
+    playerFactions: Faction[];
+}
 
 export class StartMenuComponent extends Roact.Component<StartMenuProps> {
     leftCardPos: Roact.Binding<UDim2>;
@@ -12,6 +15,7 @@ export class StartMenuComponent extends Roact.Component<StartMenuProps> {
     setCenterCardPos: (position: UDim2) => void;
     leftRef = Roact.createRef<Frame>();
     centerRef = Roact.createRef<Frame>();
+    connections = new Array<RBXScriptConnection>();
     constructor(props: StartMenuProps) {
         super(props);
         [this.leftCardPos, this.setLeftCardPos] = Roact.createBinding(new UDim2());
@@ -37,6 +41,9 @@ export class StartMenuComponent extends Roact.Component<StartMenuProps> {
             Workspace.CurrentCamera?.GetPropertyChangedSignal("ViewportSize").Connect(() =>
                 this.updateCardPos(leftSize, centerSize),
             );
+    }
+    willUnmount() {
+        this.connections.forEach((connection) => connection.Disconnect());
     }
     render() {
         return (
