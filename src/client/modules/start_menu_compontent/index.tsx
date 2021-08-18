@@ -58,6 +58,7 @@ export class StartMenuComponent extends Roact.Component<StartMenuProps, StartMen
     factionIndex = 0;
     constructor(props: StartMenuProps) {
         super(props);
+        // thanks roact bindables for being so awesome and scaling so well
         [this.leftCardVisible, this.setLeftCardVisible] = Roact.createBinding<boolean>(false);
         [this.rightCardVisible, this.setRightCardVisible] = Roact.createBinding<boolean>(false);
         [this.centerCardVisible, this.setCenterCardVisible] = Roact.createBinding<boolean>(false);
@@ -85,7 +86,6 @@ export class StartMenuComponent extends Roact.Component<StartMenuProps, StartMen
         const right: Faction | undefined = playerFactions[this.factionIndex + 1];
         if (left) {
             const role = left.getRole(Players.LocalPlayer)?.name ?? "Undefined";
-            
         }
     }
     nextCard() {}
