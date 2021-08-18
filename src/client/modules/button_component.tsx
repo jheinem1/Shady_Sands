@@ -1,5 +1,6 @@
 import { SingleMotor, Spring } from "@rbxts/flipper";
 import Roact from "@rbxts/roact";
+import { ContentProvider } from "@rbxts/services";
 
 interface ButtonComponentProps {
     sound: Sound;
@@ -22,6 +23,13 @@ export default class ButtonComponent extends Roact.Component<ButtonComponentProp
         let setBinding: (newValue: number) => void;
         [this.binding, setBinding] = Roact.createBinding(this.motor.getValue());
         this.motor.onStep(setBinding);
+    }
+    didMount() {
+        const image0 = new Instance("ImageLabel");
+        const image1 = new Instance("ImageLabel");
+        image0.Image = "rbxassetid://7250483387";
+        image1.Image = "rbxassetid://7250483916";
+        ContentProvider.PreloadAsync([image0, image1]);
     }
     render() {
         return (
