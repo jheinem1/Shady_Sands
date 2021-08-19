@@ -9,11 +9,12 @@ interface StartMenuProps {
     playerFactions: Faction[];
 }
 
-interface StartMenuState {
-    cards: Element[];
-}
+interface StartMenuState {}
 
 export class StartMenuComponent extends Roact.Component<StartMenuProps, StartMenuState> {
+    leftCard: Element;
+    center: Element;
+    rightCard: Element;
     leftCardVisible = new BetterBinding<boolean>(false);
     rightCardVisible = new BetterBinding<boolean>(false);
     centerCardVisible = new BetterBinding<boolean>(false);
@@ -41,16 +42,61 @@ export class StartMenuComponent extends Roact.Component<StartMenuProps, StartMen
     factionIndex = 0;
     constructor(props: StartMenuProps) {
         super(props);
+        this.leftCard = (
+            <CardComponent
+                visible={this.leftCardVisible}
+                focusedMotor={this.leftFocusedMotor}
+                title={this.leftCardTitle}
+                description={this.leftCardDescription}
+                position={this.leftCardPos}
+                image={this.leftCardImage}
+                groupID={this.leftCardGroupID}
+            />
+        );
+        this.rightCard = (
+            <CardComponent
+                visible={this.rightCardVisible}
+                focusedMotor={this.rightFocusedMotor}
+                title={this.rightCardTitle}
+                description={this.rightCardDescription}
+                position={this.rightCardPos}
+                image={this.rightCardImage}
+                groupID={this.rightCardGroupID}
+            />
+        );
+        this.center = (
+            <CardComponent
+                visible={this.centerCardVisible}
+                focusedMotor={this.centerFocusedMotor}
+                title={this.centerCardTitle}
+                description={this.centerCardDescription}
+                position={this.centerCardPos}
+                image={this.centerCardImage}
+                groupID={this.centerCardGroupID}
+            />
+        );
     }
     updateCards() {
         const playerFactions = this.props.playerFactions;
-        const cards = new Array<Element>();
         const left: Faction | undefined = playerFactions[this.factionIndex - 1];
         const center: Faction | undefined = playerFactions[this.factionIndex];
         const right: Faction | undefined = playerFactions[this.factionIndex + 1];
         if (left) {
             const role = left.getRole(Players.LocalPlayer)?.name ?? "Undefined";
+            this.leftCardTitle.setValue(role);
+            this.leftCardDescription.setValue(`${role} is a part of the group ${left?.name ?? "Undefined"}.`);
         }
+        if (right) {
+            const role = right.getRole(Players.LocalPlayer)?.name ?? "Undefined";
+            this.rightCardTitle.setValue(role);
+            this.rightCardDescription.setValue(`${role} is a part of the group ${right?.name ?? "Undefined"}.`);
+        }
+        if (center) {
+            const role = center.getRole(Players.LocalPlayer)?.name ?? "Undefined";
+            this.centerCardTitle.setValue(role);
+            this.centerCardDescription.setValue(`${role} is a part of the group ${center?.name ?? "Undefined"}.`);
+        }
+        // this.updateCardPos(sideSize, centerSize);
     }
     nextCard() {}
     updateCardPos(sideSize: Vector2, centerSize: Vector2) {
@@ -79,7 +125,9 @@ export class StartMenuComponent extends Roact.Component<StartMenuProps, StartMen
     render() {
         return (
             <screengui Key="Start Menu" ResetOnSpawn={false} ZIndexBehavior={Enum.ZIndexBehavior.Sibling}>
-                {this.state.cards}
+                {this.leftCard}
+                {this.center}
+                {this.rightCard}
             </screengui>
         );
     }
