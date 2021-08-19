@@ -7,11 +7,10 @@ export class BetterBinding<T> implements Binding<T> {
         [this.binding, this.setter] = Roact.createBinding<T>(value);
     }
     setValue(value: T): void {
-        this.setter(value);
+        if (value !== this.value) this.setter(value);
         this.updateValue();
     }
     getValue(): T {
-        this.updateValue();
         return this.value;
     }
     updateValue(): void {
