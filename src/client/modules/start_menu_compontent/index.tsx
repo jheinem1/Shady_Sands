@@ -11,68 +11,87 @@ interface StartMenuProps {
 
 interface StartMenuState {}
 
+interface CardProps {
+    visible: BetterBinding<boolean>;
+    position: BetterBinding<UDim2>;
+    title: BetterBinding<string>;
+    description: BetterBinding<string>;
+    image: BetterBinding<number | undefined>;
+    groupID: BetterBinding<number | undefined>;
+    focusedMotor: SingleMotor;
+}
+
 export class StartMenuComponent extends Roact.Component<StartMenuProps, StartMenuState> {
     leftCard: Element;
     center: Element;
     rightCard: Element;
-    leftCardVisible = new BetterBinding<boolean>(false);
-    rightCardVisible = new BetterBinding<boolean>(false);
-    centerCardVisible = new BetterBinding<boolean>(false);
-    leftCardPos = new BetterBinding(new UDim2());
-    rightCardPos = new BetterBinding(new UDim2());
-    centerCardPos = new BetterBinding(new UDim2());
-    leftCardTitle = new BetterBinding("");
-    rightCardTitle = new BetterBinding("");
-    centerCardTitle = new BetterBinding("");
-    leftCardDescription = new BetterBinding("");
-    rightCardDescription = new BetterBinding("");
-    centerCardDescription = new BetterBinding("");
-    leftCardImage = new BetterBinding<number | undefined>(undefined);
-    rightCardImage = new BetterBinding<number | undefined>(undefined);
-    centerCardImage = new BetterBinding<number | undefined>(undefined);
-    leftCardGroupID = new BetterBinding<number | undefined>(undefined);
-    rightCardGroupID = new BetterBinding<number | undefined>(undefined);
-    centerCardGroupID = new BetterBinding<number | undefined>(undefined);
-    leftFocusedMotor = new SingleMotor(0);
-    centerFocusedMotor = new SingleMotor(0);
-    rightFocusedMotor = new SingleMotor(0);
+    leftCardProps: CardProps = {
+        visible: new BetterBinding<boolean>(false),
+        position: new BetterBinding(new UDim2()),
+        title: new BetterBinding(""),
+        description: new BetterBinding(""),
+        image: new BetterBinding<number | undefined>(undefined),
+        groupID: new BetterBinding<number | undefined>(undefined),
+        focusedMotor: new SingleMotor(0),
+    };
+    rightCardProps: CardProps = {
+        visible: new BetterBinding<boolean>(false),
+        position: new BetterBinding(new UDim2()),
+        title: new BetterBinding(""),
+        description: new BetterBinding(""),
+        image: new BetterBinding<number | undefined>(undefined),
+        groupID: new BetterBinding<number | undefined>(undefined),
+        focusedMotor: new SingleMotor(0),
+    };
+    centerCardProps: CardProps = {
+        visible: new BetterBinding<boolean>(false),
+        position: new BetterBinding(new UDim2()),
+        title: new BetterBinding(""),
+        description: new BetterBinding(""),
+        image: new BetterBinding<number | undefined>(undefined),
+        groupID: new BetterBinding<number | undefined>(undefined),
+        focusedMotor: new SingleMotor(0),
+    };
     leftRef = Roact.createRef<Frame>();
     centerRef = Roact.createRef<Frame>();
     connections = new Array<RBXScriptConnection>();
     factionIndex = 0;
     constructor(props: StartMenuProps) {
         super(props);
+        const left = this.leftCardProps;
+        const right = this.rightCardProps;
+        const center = this.centerCardProps;
         this.leftCard = (
             <CardComponent
-                visible={this.leftCardVisible}
-                focusedMotor={this.leftFocusedMotor}
-                title={this.leftCardTitle}
-                description={this.leftCardDescription}
-                position={this.leftCardPos}
-                image={this.leftCardImage}
-                groupID={this.leftCardGroupID}
+                visible={left.visible}
+                focusedMotor={left.focusedMotor}
+                title={left.title}
+                description={left.description}
+                position={left.position}
+                image={left.image}
+                groupID={left.groupID}
             />
         );
         this.rightCard = (
             <CardComponent
-                visible={this.rightCardVisible}
-                focusedMotor={this.rightFocusedMotor}
-                title={this.rightCardTitle}
-                description={this.rightCardDescription}
-                position={this.rightCardPos}
-                image={this.rightCardImage}
-                groupID={this.rightCardGroupID}
+                visible={right.visible}
+                focusedMotor={right.focusedMotor}
+                title={right.title}
+                description={right.description}
+                position={right.position}
+                image={right.image}
+                groupID={right.groupID}
             />
         );
         this.center = (
             <CardComponent
-                visible={this.centerCardVisible}
-                focusedMotor={this.centerFocusedMotor}
-                title={this.centerCardTitle}
-                description={this.centerCardDescription}
-                position={this.centerCardPos}
-                image={this.centerCardImage}
-                groupID={this.centerCardGroupID}
+                visible={center.visible}
+                focusedMotor={center.focusedMotor}
+                title={center.title}
+                description={center.description}
+                position={center.position}
+                image={center.image}
+                groupID={center.groupID}
             />
         );
     }
@@ -83,18 +102,18 @@ export class StartMenuComponent extends Roact.Component<StartMenuProps, StartMen
         const right: Faction | undefined = playerFactions[this.factionIndex + 1];
         if (left) {
             const role = left.getRole(Players.LocalPlayer)?.name ?? "Undefined";
-            this.leftCardTitle.setValue(role);
-            this.leftCardDescription.setValue(`${role} is a part of the group ${left?.name ?? "Undefined"}.`);
+            this.leftCardProps.title.setValue(role);
+            this.leftCardProps.description.setValue(`${role} is a part of the group ${left?.name ?? "Undefined"}.`);
         }
         if (right) {
             const role = right.getRole(Players.LocalPlayer)?.name ?? "Undefined";
-            this.rightCardTitle.setValue(role);
-            this.rightCardDescription.setValue(`${role} is a part of the group ${right?.name ?? "Undefined"}.`);
+            this.rightCardProps.title.setValue(role);
+            this.rightCardProps.description.setValue(`${role} is a part of the group ${right?.name ?? "Undefined"}.`);
         }
         if (center) {
             const role = center.getRole(Players.LocalPlayer)?.name ?? "Undefined";
-            this.centerCardTitle.setValue(role);
-            this.centerCardDescription.setValue(`${role} is a part of the group ${center?.name ?? "Undefined"}.`);
+            this.centerCardProps.title.setValue(role);
+            this.centerCardProps.description.setValue(`${role} is a part of the group ${center?.name ?? "Undefined"}.`);
         }
         // this.updateCardPos(sideSize, centerSize);
     }
@@ -102,9 +121,13 @@ export class StartMenuComponent extends Roact.Component<StartMenuProps, StartMen
     updateCardPos(sideSize: Vector2, centerSize: Vector2) {
         const center = this.getViewportCenter();
         if (center) {
-            this.leftCardPos.setValue(UDim2.fromOffset(-sideSize.X / 2, center.Y - sideSize.Y / 2));
-            this.rightCardPos.setValue(UDim2.fromOffset(center.X - sideSize.X / 2, center.Y - sideSize.Y / 2));
-            this.centerCardPos.setValue(UDim2.fromOffset(center.X - center.X / 2, center.Y - centerSize.Y / 2));
+            this.leftCardProps.position.setValue(UDim2.fromOffset(-sideSize.X / 2, center.Y - sideSize.Y / 2));
+            this.rightCardProps.position.setValue(
+                UDim2.fromOffset(center.X - sideSize.X / 2, center.Y - sideSize.Y / 2),
+            );
+            this.centerCardProps.position.setValue(
+                UDim2.fromOffset(center.X - center.X / 2, center.Y - centerSize.Y / 2),
+            );
         }
     }
     getViewportCenter() {
