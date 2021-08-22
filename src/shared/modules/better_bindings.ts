@@ -6,6 +6,25 @@ export class BetterBinding<T> implements Binding<T> {
     onChange = new Array<(value: T) => void>();
     constructor(protected value: T) {
         [this.binding, this.setter] = Roact.createBinding<T>(value);
+        // the following spaghetti code is brought to you by roact's type handing
+        let bindingType: unknown;
+        let bindingImpl: unknown;
+        for (const [k, _] of this.binding as unknown as Map<unknown, unknown>) {
+            switch (tostring(k)) {
+                case "RoactType":
+                    bindingType = k;
+                    break;
+                case "BindingImpl":
+                    bindingImpl = k;
+                    break;
+            }
+        }
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        this[bindingType] = this.binding[bindingType];
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        this[bindingImpl] = this.binding[bindingImpl];
     }
     setValue(value: T): void {
         if (value !== this.value) this.setter(value);
